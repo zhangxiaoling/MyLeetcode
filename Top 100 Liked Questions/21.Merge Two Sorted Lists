@@ -1,0 +1,89 @@
+21.Merge Two Sorted Lists
+==========================
+题目地址
+-------------
+[https://leetcode.com/problems/merge-two-sorted-lists/](https://leetcode.com/problems/merge-two-sorted-lists/)
+
+题目描述
+-------------
+Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.
+
+Example:
+
+Input: 1->2->4, 1->3->4
+
+Output: 1->1->2->3->4->4
+
+题目思路
+----------
+此题有两种方法，一种是迭代方法，一种是递归方法。
+
+**iteratively 迭代：**
+
+（1）重新定义一个头指针cur。
+
+（2）如果l1.val小于l2.val，头指针指向l1，并且移动指针cur=cur.next和l1=l1.next。
+
+（3）如果l1.val大于于l2.val，头指针指向l2，并且移动指针cur=cur.next和l2=l2.next。
+
+（3）**一个需要注意的步骤：当遍历完l1或者l2时，此时l1指向NULL或者l2指向NULL，cur指向l1或者l2中不指向NULL的指针以及其之后的内容。**
+
+（4）最后返回最初定义的头指针指向的下一个位置。（为了方便，在一开始定义两个完全一样的指针）
+
+**recursively  递归：**
+
+一个含直接或间接调用本函数语句的函数被称之为递归函数，在上面的例子中能够看出，它必须满足以下两个条件：
+
+1） 在每一次调用自己时，必须是（在某种意义上）更接近于解；
+
+2） 必须有一个终止处理或计算的准则。
+
+在这里：
+
+（1）比较当前l1、l2指针所指的值，确定当前选择的指针l1或l2，并调用自己确定当前指针的next的指向，返回当前的指针。
+
+（2）当l1为NULL或者l2为NULL时，当前指针的next指向l1或l2中不为NULL的一个。
+
+题目代码
+---------
+迭代法：
+```
+class Solution(object):
+    def mergeTwoLists(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        dummy=cur=ListNode(0)
+        while l1 and l2:
+            if l1.val < l2.val:
+                cur.next=l1
+                l1=l1.next
+            else:
+                cur.next=l2
+                l2=l2.next
+            cur=cur.next
+        
+        cur.next=l1 or l2
+        return dummy.next
+```
+
+递归法：
+```
+class Solution(object):
+    def mergeTwoLists(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        if not l1 or not l2:
+            return l1 or l2
+        if l1.val<l2.val:
+            l1.next=self.mergeTwoLists(l1.next,l2) # 在类中调用递归函数注意使用self.mergeTwoLists
+            return l1
+        else:
+            l2.next=self.mergeTwoLists(l1,l2.next)
+            return l2
+```
